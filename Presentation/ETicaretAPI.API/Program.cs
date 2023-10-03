@@ -1,3 +1,4 @@
+using ETicaretAPI.Application;
 using ETicaretAPI.Application.Validators.Products;
 using ETicaretAPI.Infrastructure;
 using ETicaretAPI.Infrastructure.Enums;
@@ -15,6 +16,7 @@ builder.Services.AddInfrastructureServices();
 //builder.Services.AddStorage<LocalStorage>();
 builder.Services.AddStorage<AzureStorage>();
 //builder.Services.AddStorage(StorageType.Local);
+builder.Services.AddApplicationServices();
 //Cors Politikasý
 builder.Services.AddCors(options=>options.AddDefaultPolicy(policy=>
     policy.WithOrigins("http://localhost:4200", "https://localhost:4200").AllowAnyHeader().AllowAnyMethod()
