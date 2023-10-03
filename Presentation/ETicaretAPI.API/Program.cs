@@ -12,8 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices();
-builder.Services.AddStorage<LocalStorage>();
-//builder.Services.AddStorage<AzureStorage>();
+//builder.Services.AddStorage<LocalStorage>();
+builder.Services.AddStorage<AzureStorage>();
 //builder.Services.AddStorage(StorageType.Local);
 //Cors Politikasý
 builder.Services.AddCors(options=>options.AddDefaultPolicy(policy=>
