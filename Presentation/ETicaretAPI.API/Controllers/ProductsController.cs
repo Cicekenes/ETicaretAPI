@@ -7,6 +7,7 @@ using ETicaretAPI.Application.Features.Queries.ProductImageFiles.GetProductImage
 using ETicaretAPI.Application.Features.Queries.Products.GetAllProduct;
 using ETicaretAPI.Application.Features.Queries.Products.GetByIdProduct;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -14,9 +15,10 @@ namespace ETicaretAPI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Admin")]
     public class ProductsController : ControllerBase
     {
-       
+
         readonly IMediator _mediator;
 
         public ProductsController(IMediator mediator)
@@ -67,7 +69,7 @@ namespace ETicaretAPI.API.Controllers
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> GetProductImages([FromRoute] GetProductImagesQueryRequest getProductImagesQueryRequest)
         {
-            List<GetProductImagesQueryResponse> getProductImagesQueryResponse=await _mediator.Send(getProductImagesQueryRequest);
+            List<GetProductImagesQueryResponse> getProductImagesQueryResponse = await _mediator.Send(getProductImagesQueryRequest);
             return Ok(getProductImagesQueryResponse);
         }
 

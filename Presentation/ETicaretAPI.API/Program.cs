@@ -33,9 +33,9 @@ builder.Services.AddControllers(options=>options.Filters.Add<ValidationFilter>()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Token üzerinden bir istek geliyorsa jwt olduðunu bil ve bu konfigler üzerinden doðrula.
-builder.Services.AddAuthentication("Admin")
-    .AddJwtBearer(options =>
+//Admin Token üzerinden bir istek geliyorsa jwt olduðunu bil ve bu konfigler üzerinden doðrula.
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer("Admin", options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters()
         {
