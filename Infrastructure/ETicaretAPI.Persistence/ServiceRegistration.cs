@@ -19,6 +19,9 @@ using ETicaretAPI.Persistence.Repositories.InvoiceFileRepos;
 using ETicaretAPI.Application.Repositories.FileRepos;
 using ETicaretAPI.Persistence.Repositories.FileRepos;
 using ETicaretAPI.Domain.Entities.Identity;
+using ETicaretAPI.Application.Abstractions.Services;
+using ETicaretAPI.Persistence.Services;
+using ETicaretAPI.Application.Abstractions.Services.Authentications;
 
 namespace ETicaretAPI.Persistence
 {
@@ -48,6 +51,10 @@ namespace ETicaretAPI.Persistence
             services.AddScoped<IInvoiceFileReadRepository,InvoiceFileReadRepository>();
             services.AddScoped<IFileReadRepository,FileReadRepository>();
             services.AddScoped<IFileWriteRepository,FileWriteRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IExternalAuthentication, AuthService>();
+            services.AddScoped<IInternalAuthentication, AuthService>();
         }
     }
 }

@@ -1,41 +1,34 @@
-﻿using ETicaretAPI.Application.Exceptions;
-using ETicaretAPI.Domain.Entities.Identity;
+﻿using ETicaretAPI.Application.Abstractions.Services;
+using ETicaretAPI.Application.DTOs.User;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace ETicaretAPI.Application.Features.Commands.AppUsers.CreateUser
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommandRequest, CreateUserCommandResponse>
     {
-        private readonly UserManager<AppUser> _userManager;
+        private readonly IUserService _userService;
 
-        public CreateUserCommandHandler(UserManager<AppUser> userManager)
+        public CreateUserCommandHandler(IUserService userService)
         {
-            _userManager = userManager;
+            _userService = userService;
         }
 
         public async Task<CreateUserCommandResponse> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
         {
-            IdentityResult result = await _userManager.CreateAsync(new()
+            CreateUserResponse response =await _userService.CreateAsync(new()
             {
-                Id=Guid.NewGuid().ToString(),
-                UserName = request.Username,
+                Email = request.Email,
                 NameSurname = request.NameSurname,
-                Email = request.Email
-            }, request.Password);
+                Username = request.Username,
+                Password = request.Password,
+                PasswordConfirm = request.PasswordConfirm
+            });
 
-            CreateUserCommandResponse response = new CreateUserCommandResponse()
+            return new()
             {
-                Succeeded=result.Succeeded
+                Message = response.Message,
+                Succeeded = response.Succeeded
             };
-
-            if (result.Succeeded)
-                response.Message = "Kullanıcı başarıyla oluşturulmuştur.";
-            else
-                foreach (var error in result.Errors)
-                    response.Message += $"{error.Code} - {error.Description}\n";
-
-            return response;
         }
     }
 }

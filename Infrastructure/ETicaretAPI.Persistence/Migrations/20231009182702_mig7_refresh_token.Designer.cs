@@ -3,6 +3,7 @@ using System;
 using ETicaretAPI.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ETicaretAPI.Persistence.Migrations
 {
     [DbContext(typeof(ETicaretAPIDbContext))]
-    partial class ETicaretAPIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231009182702_mig7_refresh_token")]
+    partial class mig7_refresh_token
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,9 +153,10 @@ namespace ETicaretAPI.Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("RefreshToken")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("RefreshTokenEndDate")
+                    b.Property<DateTime>("RefreshTokenEndDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SecurityStamp")

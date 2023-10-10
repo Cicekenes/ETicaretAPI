@@ -1,11 +1,14 @@
 ﻿using ETicaretAPI.Application.Abstractions.Tokens;
 using ETicaretAPI.Application.DTOs;
+using ETicaretAPI.Domain.Entities.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +23,7 @@ namespace ETicaretAPI.Infrastructure.Services.Tokens
             _configuration = configuration;
         }
 
-        public Token CreateAccessToken(int minute)
+        public Token CreateAccessToken(int second, AppUser user)
         {
             Token token = new Token();
 
@@ -32,19 +35,32 @@ namespace ETicaretAPI.Infrastructure.Services.Tokens
 
             //Oluşturulacak token ayarlarını veriyoruz.
 
-            token.Expiration = DateTime.UtcNow.AddMinutes(minute);
+            token.Expiration = DateTime.UtcNow.AddSeconds(second);
             JwtSecurityToken securityToken = new JwtSecurityToken(
                 audience: _configuration["Token:Audience"],
                 issuer: _configuration["Token:Issuer"],
                 expires: token.Expiration,
                 notBefore: DateTime.UtcNow, //Üretildiği an devreye girsin.
-                signingCredentials: signingCredentials
+                signingCredentials: signingCredentials,
+                claims:new List<Claim> { new(ClaimTypes.Name,user.UserName)}
                 );
 
             //Token oluşturucu sınıfından bir örnek alalım.
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             token.AccessToken = tokenHandler.WriteToken(securityToken);
+
+            //string refreshToken = CreateRefreshToken();
+
+            token.RefreshToken= CreateRefreshToken();
             return token;
+        }
+
+        public string CreateRefreshToken()
+        {
+            byte[] number = new byte[32];
+            using RandomNumberGenerator random = RandomNumberGenerator.Create();
+            random.GetBytes(number);
+            return Convert.ToBase64String(number);
         }
     }
 }
