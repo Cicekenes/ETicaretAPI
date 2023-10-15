@@ -22,6 +22,10 @@ using ETicaretAPI.Domain.Entities.Identity;
 using ETicaretAPI.Application.Abstractions.Services;
 using ETicaretAPI.Persistence.Services;
 using ETicaretAPI.Application.Abstractions.Services.Authentications;
+using ETicaretAPI.Application.Repositories.BasketItemRepos;
+using ETicaretAPI.Persistence.Repositories.BasketItemRepos;
+using ETicaretAPI.Application.Repositories.BasketRepos;
+using ETicaretAPI.Persistence.Repositories.BasketRepos;
 
 namespace ETicaretAPI.Persistence
 {
@@ -29,7 +33,7 @@ namespace ETicaretAPI.Persistence
     {
         public static void AddPersistenceServices(this IServiceCollection services)
         {
-            services.AddDbContext<ETicaretAPIDbContext>(options=>options.UseNpgsql(Configuration.ConnectionString));
+            services.AddDbContext<ETicaretAPIDbContext>(options => options.UseNpgsql(Configuration.ConnectionString));
             services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.Password.RequiredLength = 3;
@@ -37,24 +41,31 @@ namespace ETicaretAPI.Persistence
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
-                
+
             }).AddEntityFrameworkStores<ETicaretAPIDbContext>();
-            services.AddScoped<ICustomerReadRepository,CustomerReadRepository>();
-            services.AddScoped<ICustomerWriteRepository,CustomerWriteRepository>();
-            services.AddScoped<IOrderReadRepository,OrderReadRepository>();
-            services.AddScoped<IOrderWriteRepository,OrderWriteRepository>();
-            services.AddScoped<IProductReadRepository,ProductReadRepository>();
-            services.AddScoped<IProductWriteRepository,ProductWriteRepository>();
-            services.AddScoped<IProductImageFileReadRepository,ProductImageFileReadRepository>();
-            services.AddScoped<IProductImageFileWriteRepository,ProductImageFileWriteRepository>();
-            services.AddScoped<IInvoiceFileWriteRepository,InvoiceFileWriteRepository>();
-            services.AddScoped<IInvoiceFileReadRepository,InvoiceFileReadRepository>();
-            services.AddScoped<IFileReadRepository,FileReadRepository>();
-            services.AddScoped<IFileWriteRepository,FileWriteRepository>();
+            services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
+            services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
+            services.AddScoped<IOrderReadRepository, OrderReadRepository>();
+            services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
+            services.AddScoped<IProductReadRepository, ProductReadRepository>();
+            services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
+            services.AddScoped<IProductImageFileReadRepository, ProductImageFileReadRepository>();
+            services.AddScoped<IProductImageFileWriteRepository, ProductImageFileWriteRepository>();
+            services.AddScoped<IInvoiceFileWriteRepository, InvoiceFileWriteRepository>();
+            services.AddScoped<IInvoiceFileReadRepository, InvoiceFileReadRepository>();
+            services.AddScoped<IFileReadRepository, FileReadRepository>();
+            services.AddScoped<IFileWriteRepository, FileWriteRepository>();
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IExternalAuthentication, AuthService>();
             services.AddScoped<IInternalAuthentication, AuthService>();
+
+            services.AddScoped<IBasketItemReadRepository, BasketItemReadRepository>();
+            services.AddScoped<IBasketItemWriteRepository, BasketItemWriteRepository>();
+            services.AddScoped<IBasketReadRepository, BasketReadRepository>();
+            services.AddScoped<IBasketWriteRepository, BasketWriteRepository>();
         }
     }
 }
