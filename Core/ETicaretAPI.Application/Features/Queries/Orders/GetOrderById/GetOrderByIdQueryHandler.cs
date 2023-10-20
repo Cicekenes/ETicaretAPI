@@ -1,4 +1,5 @@
 ﻿using ETicaretAPI.Application.Abstractions.Services;
+using ETicaretAPI.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,8 @@ namespace ETicaretAPI.Application.Features.Queries.Orders.GetOrderById
                 Description= data.Description,
                 Address= data.Address,
                 BasketItems= data.BasketItems,
-                CreatedDate = data.CreatedDate
+                CreatedDate = data.CreatedDate,
+                Completed = data.Completed
             };
         }
     }

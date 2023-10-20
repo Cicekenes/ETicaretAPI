@@ -1,4 +1,5 @@
 ﻿using ETicaretAPI.Application.Abstractions.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,6 @@ namespace ETicaretAPI.Infrastructure.Services
     public class MailService : IMailService
     {
         private readonly IConfiguration _configuration;
-
         public MailService(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -58,5 +58,14 @@ namespace ETicaretAPI.Infrastructure.Services
 
             await SendMailAsync(to, "Şifre Yenileme Talebi", mail.ToString());
         }
+
+
+        public async Task SendCompletedOrderMailAsync(string to, string orderCode, DateTime orderDate, string userName)
+        {
+            string mail = $"Sayın {userName} Merhaba<br> " +
+                $"{orderDate} tarihinde vermiş olduğunuz {orderCode} kodlu siparişiniz tamamlanmış ve kargo firmasına verilmiştir.";
+            await SendMailAsync(to,$"{orderCode} Sipariş Numaralı Siparişiniz Tamamlandı",mail);
+        }
+
     }
 }
