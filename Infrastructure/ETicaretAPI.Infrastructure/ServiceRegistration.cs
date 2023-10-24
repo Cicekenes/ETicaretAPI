@@ -26,8 +26,9 @@ namespace ETicaretAPI.Infrastructure
             //serviceCollection.AddScoped<IFileService, FileService>();
             serviceCollection.AddScoped<IStorageService, StorageService>();
             serviceCollection.AddScoped<ITokenHandler, TokenHandler>();
-            serviceCollection.AddScoped<IMailService,MailService>();
-            serviceCollection.AddScoped<IApplicationService,ApplicationService>();
+            serviceCollection.AddScoped<IMailService, MailService>();
+            serviceCollection.AddScoped<IApplicationService, ApplicationService>();
+            serviceCollection.AddScoped<IQRCodeService, QRCodeService>();
         }
 
         public static void AddStorage<T>(this IServiceCollection serviceCollection) where T : Storage, IStorage
@@ -35,12 +36,12 @@ namespace ETicaretAPI.Infrastructure
             //IStorage sınıfının concrete'leri T türündedir.
             serviceCollection.AddScoped<IStorage, T>();
         }
-        public static void AddStorage(this IServiceCollection serviceCollection, StorageType storageType) 
+        public static void AddStorage(this IServiceCollection serviceCollection, StorageType storageType)
         {
             switch (storageType)
             {
                 case StorageType.Local:
-                    serviceCollection.AddScoped<IStorage,LocalStorage>();
+                    serviceCollection.AddScoped<IStorage, LocalStorage>();
                     break;
                 case StorageType.Azure:
                     serviceCollection.AddScoped<IStorage, AzureStorage>();

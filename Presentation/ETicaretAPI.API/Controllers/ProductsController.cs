@@ -1,4 +1,5 @@
-﻿using ETicaretAPI.Application.Consts;
+﻿using ETicaretAPI.Application.Abstractions.Services;
+using ETicaretAPI.Application.Consts;
 using ETicaretAPI.Application.CustomAttributes;
 using ETicaretAPI.Application.Enums;
 using ETicaretAPI.Application.Features.Commands.ProductImageFiles.ChangeShowcaseImage;
@@ -7,6 +8,7 @@ using ETicaretAPI.Application.Features.Commands.ProductImageFiles.UploadProductI
 using ETicaretAPI.Application.Features.Commands.Products.CreateProduct;
 using ETicaretAPI.Application.Features.Commands.Products.RemoveProduct;
 using ETicaretAPI.Application.Features.Commands.Products.UpdateProduct;
+using ETicaretAPI.Application.Features.Commands.Products.UpdateStockQrCodeToProduct;
 using ETicaretAPI.Application.Features.Queries.ProductImageFiles.GetProductImages;
 using ETicaretAPI.Application.Features.Queries.Products.GetAllProduct;
 using ETicaretAPI.Application.Features.Queries.Products.GetByIdProduct;
@@ -23,10 +25,11 @@ namespace ETicaretAPI.API.Controllers
     {
 
         readonly IMediator _mediator;
-
-        public ProductsController(IMediator mediator)
+        readonly IProductService _productService;
+        public ProductsController(IMediator mediator, IProductService productService)
         {
             _mediator = mediator;
+            _productService = productService;
         }
 
         [HttpGet]
@@ -34,6 +37,20 @@ namespace ETicaretAPI.API.Controllers
         {
             GetAllProductQueryResponse getAllProductQueryResponse = await _mediator.Send(getAllProductQueryRequest);
             return Ok(getAllProductQueryResponse);
+        }
+
+        [HttpGet("qrcode/{productId}")]
+        public async Task<IActionResult> GetQrCodeToProduct([FromRoute] string productId)
+        {
+            var data = await _productService.QrCodeToProductAsync(productId);
+            return File(data,"image/png");
+        }
+
+        [HttpPut("qrcode")]
+        public async Task<IActionResult> UpdateStockQrCodeToProduct(UpdateStockQrCodeToProductCommandRequest updateStockQrCodeToProductCommandRequest)
+        {
+            UpdateStockQrCodeToProductCommandResponse response = await _mediator.Send(updateStockQrCodeToProductCommandRequest);
+            return Ok(response);
         }
 
         [HttpGet("{Id}")]
@@ -97,11 +114,11 @@ namespace ETicaretAPI.API.Controllers
         }
 
         [HttpGet("[action]")]
-        [Authorize(AuthenticationSchemes ="Admin")]
+        [Authorize(AuthenticationSchemes = "Admin")]
         [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Updating, Definition = "Change Showcase Image")]
-        public async Task <IActionResult> ChangeShowcaseImage([FromQuery]ChangeShowcaseImageCommandRequest changeShowcaseImageCommandRequest)
+        public async Task<IActionResult> ChangeShowcaseImage([FromQuery] ChangeShowcaseImageCommandRequest changeShowcaseImageCommandRequest)
         {
-            ChangeShowcaseImageCommandResponse response=await _mediator.Send(changeShowcaseImageCommandRequest);
+            ChangeShowcaseImageCommandResponse response = await _mediator.Send(changeShowcaseImageCommandRequest);
             return Ok(response);
         }
     }
